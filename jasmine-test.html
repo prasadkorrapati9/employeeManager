@@ -14,12 +14,13 @@
     <script src="controllers/addController.js"></script>
     <script src="controllers/editController.js"></script>
     <script src="Services/employeeService.js"></script>
+    <script src="Services/promiseService.js"></script>
 </head>
 <body>
 </body>
 <script type="text/javascript">
 
-    describe('Employee Manager', function () {
+    describe('Employee Manager Test Suite', function () {
         var $controller;
         beforeEach(angular.mock.module('employeeManager'));
         beforeEach(angular.mock.inject(function(_$controller_){
@@ -164,6 +165,104 @@
                 expect($scope.redirectToAddPage).toHaveBeenCalled();
             });
         });
+    });
+
+    describe('Testing the employeesController that uses promise', function() {
+        var $scope,
+            $q,
+            deferred,
+            $controller;
+        beforeEach(angular.mock.module('employeeManager'));
+
+        beforeEach(inject(function(_$controller_, _$rootScope_, _$q_, promiseService){
+            $q = _$q_;
+            $scope = _$rootScope_.$new();
+            $controller = _$controller_;
+
+            // We use the $q service to create a mock instance of defer
+            deferred = _$q_.defer();
+
+            // Use a Jasmine Spy to return the deferred promise
+            spyOn(promiseService, 'search').and.returnValue(deferred.promise);
+
+            // Init the controller, passing our spy service instance
+            $controller('employeesController', {
+                $scope: $scope,
+                promiseService: promiseService
+            });
+        }));
+
+        it('should resolve Promise', function() {
+            // Setup the data we wish to return for the .then function in the controller
+            deferred.resolve([{ id: 1 }, { id: 2 }]);
+
+            // We have to call apply for this to work
+            $scope.$apply();
+
+            console.log("$scope.data ", $scope);
+            // Since we called apply, now we can perform our assertions
+            expect($scope.data).not.toBe(undefined);
+            expect($scope.error).toBe(undefined);
+        });
+
+        it('should reject promise', function() {
+
+            // Setup the reject, this will call the 'catch' function in the controller.
+            deferred.reject();
+
+            // We have to call apply for this to work
+            $scope.$apply();
+
+            // Since we called apply, now we can perform our assertions
+            expect($scope.error).toEqual("There has been an error!");
+            expect($scope.data).toBe(undefined);
+        });
+    });
+
+    describe('Testing promise Service.', function() {
+        var deferred,
+            $q,
+            $rootScope,
+            service;
+
+        beforeEach(angular.mock.module('employeeManager'));
+
+        // Get the service from the injector
+        beforeEach(inject(function(_$q_, _$rootScope_, promiseService) {
+            $q = _$q_;
+            $rootScope = _$rootScope_;
+            deferred = _$q_.defer();
+                service = promiseService;
+                console.log("promiseService--> ", promiseService)
+            }));
+
+            it('Service Should have search function', function(){
+                expect(service.search()).toBeDefined();
+            });
+
+            it('should resolve promise', function () {
+                var response;
+                deferred.promise.then(function(data) {
+                    response = data;
+                });
+                deferred.resolve('Returned OK!');
+                $rootScope.$apply();
+                expect(response).toBe('Returned OK!');
+            });
+
+            it('should reject promise', function () {
+                var response;
+                deferred.promise.then(function(data) {
+                    response = data;
+                });
+                deferred.promise.catch(function(data) {
+                    response = 'Error: ' + data;
+                });
+                deferred.reject('500 Status');
+                $rootScope.$apply();
+                expect(response).toBe('Error: 500 Status');
+            });
+
     });
 
 </script>
