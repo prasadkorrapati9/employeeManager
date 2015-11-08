@@ -1,0 +1,37 @@
+.media-body {
+    font-size: 14px;
+    padding-top: 20px;
+}
+
+.bold {
+    font-weight: bold;
+}
+table thead {
+    font-weight: bold;
+}
+
+a.edit, a.delete, a.edit:hover, a.delete:hover {
+    text-decoration: none;
+}
+
+nav.header {
+	background-color: #206E9F;
+	border-color: #206E9F;
+	border-radius: 0px;
+}
+.title {
+	color: #FFF !important;
+}
+
+.add-contact:hover, .add-contact, .save-button{
+    color: #fff;
+    background-color: #206E9F;
+    border-radius: 6px;
+    height: 45px;
+    min-width: 100px;
+}
+
+.cancel-button {
+	color: #fff;
+	background-color: #E76A66;
+}

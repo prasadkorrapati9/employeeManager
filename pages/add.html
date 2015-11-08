@@ -1,0 +1,68 @@
+<div class="row">
+    <h3 class="text-center">Create Employee</h3>
+    <hr>
+    <form class="form-horizontal" name="addForm" novalidate>
+
+        <!--  Full Name -->
+        <div class="form-group col-xs-12" ng-class="{ 'has-error' : addForm.name.$invalid && !addForm.name.$pristine }">
+            <label class="control-label col-sm-4 control-label">Full name:</label>
+            <div class="col-sm-6">
+                <input type="text" name="name" class="form-control" ng-model= "fullName" placeholder="Full name" required>
+                <p ng-show="addForm.name.$invalid && !addForm.name.$pristine" class="help-block">Full name is required.</p>
+            </div>
+        </div>
+
+        <!--  Email Address -->
+        <div class="form-group col-xs-12" ng-class="{ 'has-error' : addForm.email.$invalid && !addForm.email.$pristine }">
+            <label class="control-label col-sm-4">Email address:</label>
+            <div class="col-sm-6">
+                <input type="email" name="email" class="form-control" ng-model="email" placeholder="Email address" required>
+                <p ng-show="addForm.email.$invalid && !addForm.email.$pristine" class="help-block">Email is required.</p>
+            </div>
+        </div>
+
+        <!--  Telephone Number -->
+        <div class="form-group col-xs-12" ng-class="{ 'has-error' : addForm.telPhone.$invalid && !addForm.telPhone.$pristine }">
+            <label class="control-label col-sm-4">Telephone number:</label>
+            <div class="col-sm-6">
+                <input type="tel" name='telPhone' class="form-control" ng-model="telephone" placeholder="Telephone number" required>
+                <p ng-show="addForm.telPhone.$invalid && !addForm.telPhone.$pristine" class="help-block">Telephone is required.</p>
+            </div>
+        </div>
+
+        <!--  Gender -->
+        <div class="form-group col-xs-12" ng-class="{ 'has-error' : addForm.gender.$invalid && !addForm.gender.$pristine }">
+            <label class="control-label col-sm-4">Gender:</label>
+            <div class="col-sm-6">
+                <select name="gender" class="form-control" ng-model="gender" required>
+                  <option value="">---Please select---</option>
+                  <option value="male">male</option>
+                  <option value="female">female</option>
+                </select>
+
+
+                <p ng-show="addForm.gender.$invalid && !addForm.gender.$pristine" class="help-block">Gender is required.</p>
+            </div>
+        </div>
+
+        <!--  Preferred Locations -->
+        <div class="form-group col-xs-12" ng-class="{ 'has-error' : (addForm.preferredLocations.$invalid && !addForm.preferredLocations.$pristine) || locationCount == 0 }">
+            <label class="control-label col-sm-4">Preferred Locations:</label>
+            <div class="col-sm-6" ng-repeat="location in preferredLocations">
+                <input type="checkbox" ng-model='location.checked' ng-click="countCheck(location)"/>{{location.selected}}
+            </div>
+            <p ng-show="locationCount==0" class="help-block">Please Select one preferred at least.</p>
+            </div>
+        </div>
+
+        <!--Submit and Cancel Buttons -->
+        <div class="form-group col-xs-12">
+            <div class="col-sm-offset-4 col-sm-3">
+                <button type="submit" class="btn btn-lg save-button col-xs-12" ng-disabled="addForm.$invalid || editForm.$pristine" ng-click="addContact()">Submit</button>
+            </div>
+            <div class="col-sm-3">
+                <a href="#contacts" class="btn btn-lg cancel-button col-xs-12">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,170 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.3.3/jasmine.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.3.3/jasmine.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.3.3/jasmine-html.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.3.3/boot.min.js"></script>
+
+    <!--Libraries -->
+    <script src="library/angular/angular.js"></script>
+    <script src="library/angular/angular-mocks.js"></script>
+    <script src="library/angular/angular-route.js"></script>
+    <script src="app.js"></script>
+    <script src="controllers/employeesController.js"></script>
+    <script src="controllers/addController.js"></script>
+    <script src="controllers/editController.js"></script>
+    <script src="Services/employeeService.js"></script>
+</head>
+<body>
+</body>
+<script type="text/javascript">
+
+    describe('Employee Manager', function () {
+        var $controller;
+        beforeEach(angular.mock.module('employeeManager'));
+        beforeEach(angular.mock.inject(function(_$controller_){
+            $controller = _$controller_;
+        }));
+
+        describe('employeeService', function() {
+            it('should return the expected number of employees', function () {
+                var employeeService_Instance,
+                        employeeList,
+                        newEmployee;
+                // Get the service from the injector
+                angular.mock.inject(function GetDependencies(employeeService) {
+                    employeeService_Instance = employeeService;
+                });
+                employeeList = employeeService_Instance.getEmployeesList();
+                expect(employeeList.length).toBe(6);
+
+                newEmployee = {
+                    name : 'prasad Korrapati',
+                    tel: '651-603-1723',
+                    email: 'TerrenceSHatfield@rhyta.com',
+                    gender: 'male',
+                    preferredLocations: {
+                        Bangalore: true,
+                        Mumbai: false,
+                        Delhi: false
+                    }
+                };
+                employeeService_Instance.addEmployee(newEmployee);
+                employeeList = employeeService_Instance.getEmployeesList();
+                expect(employeeList.length).toBe(7);
+
+
+                employeeService_Instance.deleteEmployee(1);
+                expect(employeeService_Instance.getEmployeesList().length).toBe(6);
+
+                var selectedEmployee = employeeService_Instance.getSelectedEmployee(1);
+                expect(selectedEmployee).toEqual({
+                    id: 1,
+                    name : 'Terrence S. Hatfield',
+                    tel: '651-603-1723',
+                    email: 'TerrenceSHatfield@rhyta.com',
+                    gender: 'male',
+                    preferredLocations: {
+                        Bangalore: true,
+                        Mumbai: true,
+                        Delhi: false
+                    }
+                });
+
+                employeeService_Instance.updateContact({
+                    id: 1,
+                    name : 'Margy Hocket',
+                    tel: '651-603-1723',
+                    email: 'TerrenceSHatfield@rhyta.com',
+                    gender: 'Female',
+                    preferredLocations: {
+                        Bangalore: true,
+                        Mumbai: true,
+                        Delhi: true
+                    }
+                });
+
+                expect(employeeService_Instance.getSelectedEmployee(1)).toEqual({
+                    id: 1,
+                    name : 'Margy Hocket',
+                    tel: '651-603-1723',
+                    email: 'TerrenceSHatfield@rhyta.com',
+                    gender: 'Female',
+                    preferredLocations: {
+                        Bangalore: true,
+                        Mumbai: true,
+                        Delhi: true
+                    }
+                });
+            });
+
+        });
+
+        describe('add Controller', function () {
+            it('Scope initialization', function () {
+                var $scope = {};
+                var controller = $controller('addController', { $scope: $scope });
+                expect($scope.locationCount).toBe(0);
+                expect($scope.preferredLocations).toEqual([
+                    {city: 'Bangalore', selected: false},
+                    {city: 'Mumbai', selected: false},
+                    {city: 'Delhi', selected: false}
+                ]);
+            });
+        });
+
+        describe('edit Controller', function () {
+
+            it('Controller Scope initialization', function () {
+                var $scope = {},
+                    $routeParams = {},
+                    $location = {},
+                    Service;
+                $routeParams.id = "1";
+
+                // Get the service from the injector.
+                angular.mock.inject(function GetDependencies(employeeService) {
+                    Service = employeeService;
+                });
+
+                //Get the $location service from the injector.
+                beforeEach(angular.mock.inject(function(_$location_){
+                    $location = _$location_;
+                    spyOn($location, 'path');
+
+                }));
+
+                var controller = $controller('editController', { $scope: $scope, $location: $location, $routeParams: $routeParams, employeeService: Service});
+                expect($scope.email).toEqual("TerrenceSHatfield@rhyta.com");
+                expect($scope.fullName).toEqual("Terrence S. Hatfield");
+                expect($scope.gender).toEqual("male");
+                expect($scope.telephone).toEqual("651-603-1723");
+
+                $scope.fullName = "Prasad Korrapati";
+                $scope.updateEmployee = jasmine.createSpy("updateEmployee");
+                $scope.updateEmployee();
+                expect($scope.updateEmployee).toHaveBeenCalled();
+            });
+        });
+
+
+        describe('employeesController', function () {
+            it('Controller Scope initialization', function () {
+                var $scope = {};
+                var controller = $controller('employeesController', { $scope: $scope });
+                console.log(controller, "   AAA " , $scope);
+                expect($scope.employees.length).toBe(6);
+
+                $scope.deleteEmployee = jasmine.createSpy();
+                $scope.deleteEmployee();
+                expect($scope.deleteEmployee).toHaveBeenCalled();
+
+                $scope.redirectToAddPage = jasmine.createSpy();
+                $scope.redirectToAddPage();
+                expect($scope.redirectToAddPage).toHaveBeenCalled();
+            });
+        });
+    });
+
+</script>
+</html>

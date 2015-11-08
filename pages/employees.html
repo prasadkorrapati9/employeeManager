@@ -1,0 +1,38 @@
+<h3 class="text-center">List of Employees</h3>
+<hr>
+<p class="text-center">
+    <button class="btn btn-lg add-contact" ng-click="redirectToAddPage()">Add Employee</button>
+</p>
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<td>Name</td>
+			<td>Email Id</td>
+			<td>Phone Number</td>
+			<td>Gender</td>
+			<td>Edit</td>
+			<td>Delete</td>			
+		</tr>	
+	</thead>
+	<tbody>
+		<tr ng-repeat="employee in employees">
+			<td>{{employee.name}}</td>
+			<td>{{employee.email}}</td>
+			<td>{{employee.tel}}</td>
+			<td>{{employee.gender}}</td>
+			<td>
+				<a href="#/edit/{{employee.id}}" class="edit fa fa-pencil-square-o"></a>
+            </td>
+			<td>
+				<a href="" class="delete fa fa-trash-o" ng-click="deleteEmployee($index)"></a>
+			</td>
+		</tr>
+	</tbody>
+	<tfoot>
+		<tr>
+			<td colspan="6">
+				Number of Employees: <span class="bold">{{employees.length}}</span>
+			</td>
+		</tr>
+	</tfoot>
+</table>

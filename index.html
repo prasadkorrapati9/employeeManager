@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en-us" ng-app="employeeManager">
+    <head>
+        <title>Employee Manager</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+        <meta charset="UTF-8">
+
+        <link rel="stylesheet" href="library/bootstrap/dist/css/bootstrap.css" media="screen" />
+        <link rel="stylesheet" href="library/font-awesome/css/font-awesome.css" />
+        <link rel="stylesheet" href="css/app.css" />
+        <script src="library/angular/angular.js"></script>
+        <script src="library/angular/angular-route.js"></script>
+        <script src="library/underscore/underscore.js"></script>
+        <script src="app.js"></script>
+        <script src="controllers/employeesController.js"></script>
+        <script src="Services/employeeService.js"></script>
+        <script src="controllers/addController.js"></script>
+        <script src="controllers/editController.js"></script>
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-default header">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand title">Employee Manager</a>
+                </div>
+            </div>
+            </nav>
+        </header>
+
+        <div class="container ">
+            <div ng-view></div>
+        </div>
+
+    </body>
+</html>
